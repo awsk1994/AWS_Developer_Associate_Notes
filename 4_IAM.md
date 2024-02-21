@@ -17,3 +17,43 @@
 
 
 <img src="./img/4_IAM/2.png"/>
+
+## Hands On
+
+* IAM -> Users 
+    * Notice how the region for IAM is 'global'
+
+<img src="./img/4_IAM/3.png"/>
+
+* Click "Create User"
+    * Why need to create user?
+        * Because right now, you are using Root User; which is not best practice
+        
+
+<img src="./img/4_IAM/4.png"/>
+
+* Click "Next"
+
+<img src="./img/4_IAM/6.png"/>
+
+* Click "Create group"
+* Select Administrator Access
+
+<img src="./img/4_IAM/7.png"/>
+
+
+<img src="./img/4_IAM/8.png"/>
+<img src="./img/4_IAM/9.png"/>
+<img src="./img/4_IAM/10.png"/>
+
+
+* IAM -> Dashboard -> AWS Account -> Sign-in URL for IAM users in this account -> Open this in incognito
+    * Set alias for convenience
+    * Reason for this: so we have 2 screens to work with
+
+<img src="./img/4_IAM/11.png"/>
+
+<img src="./img/4_IAM/12.png"/>
+
+## IAM Policies
+
