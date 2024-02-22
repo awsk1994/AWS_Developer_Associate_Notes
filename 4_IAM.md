@@ -57,3 +57,35 @@
 
 ## IAM Policies
 
+<img src="./img/4_IAM/13.png"/>
+
+* You can add policies to users directly, or add policies to groups and add users to the groups
+
+## Password Policy
+
+<img src="./img/4_IAM/14.png"/>
+
+* AWS suports MFA (multi-factor account) as well
+    * device options
+        * Virtual MFA device (support multiple tokens on single device)
+            * Google Authenticator (phone only)
+            * Authy (multi-device)
+        * Universal 2nd Factor (U2F) Security Key
+            <img src="./img/4_IAM/15.png"/>
+            * Support for multiple root and IAM users using a single security key
+
+        * Hardware Key Fob MFA Device
+        * Hardware Key Fob MFA Device for AWS GovCloud (US)
+
+* Hands On notes
+    * IAM -> Access Managementt -> Account Settings -> Password Policy -> Edit
+
+<img src="./img/4_IAM/16.png"/>
+
+<img src="./img/4_IAM/17.png"/>
+
+<img src="./img/4_IAM/18.png"/>
+
+<img src="./img/4_IAM/19.png"/>
+
+## AWS CLI
