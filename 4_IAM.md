@@ -89,3 +89,59 @@
 <img src="./img/4_IAM/19.png"/>
 
 ## AWS CLI
+
+* Users -> <your user> -> security credential -> create access key
+* `aws configure`
+* cli permission is exact same as the console permissions (obviously)
+
+## CloudShell (not avaialble in every region)
+
+* shell icon on top right of nav bar
+* basically cli but on the aws website
+* all the files you create in cloud shell will stay..
+
+## IAM roles
+
+* Some AWS services need to perform actions on your behalf
+* To do so, we assign permissions to them via IAM roles
+* Common Roles:
+    * EC2 Instance Roles
+    * Lambda Function Roles
+    * Roles for Cloudformation
+
+* IAM -> Roles
+
+# IAM Security Tools
+
+<img src="./img/4_IAM/20.png"/>
+
+# IAM Guidelines & Best Practices
+
+* Don't use the root account except for AWS account setup
+* One physical user = One AWS User
+* Assign users to groups and assign permissions to groups
+* Create a strong password policy
+* Use and Enforce the use of Multi-Factor Authentication (MFA)
+* Create and user ROles for giving permissions to AWS services
+* Use Access Keys for Progarmmatic Access (CLI/SDK)
+* Audit Permissions of your accoutn using IAM creditials report & IAM Access Advisor
+* **Never share IAM Users & Access Keys!!**
+
+# Shared Responsibility Model for IAM
+
+
+
+<img src="./img/4_IAM/21.png"/>
+
+# IAM Section Summary
+
+* Users: mapped to a physical user, has a password for AWS console
+* Groups: Contains users only
+* Policies: JSON document that outlines permissions for users or groups
+* Roles: for EC2 instances or AWS services
+* Security: MFA + Password Policy
+* AWS CLI: Manage your AWS services using the command-line
+* AWS SDK: Manage your AWS services using a programming language
+* Access Keys: Access AWS using the CLI or SDK
+* Audit: IAM Credential REports & IAM Accesss Advisor
+
