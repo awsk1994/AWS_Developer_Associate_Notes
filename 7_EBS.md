@@ -146,3 +146,46 @@
     * applications must manage concurrent write operations
 * Up to 16 EC2 instances at a time
 * must use a file system that's cluster-aware (not XFS, EXT4, etc...)
+
+## EFS
+* Overview
+    * Managed NFS (network file system) that can be mounted on many EC2
+    * EFS works with EC2 instances in multi-AZ
+    * Highly available, scalable, expensive (3x gp2), per per user
+
+* Use Case
+    * content management, web serving, data sharing, wordpress
+* uses NFSv4.1 protocol
+* uses security group to control access to EFS
+* compabible with Linux based AMI (not windows)
+* Encryption at rest using KMS
+* POSIX file system (~Linux) that has a standard file API
+* File system scales automatically, pay-per-use, no capacity planning
+
+### Performance & Storage Classes
+* EPS Scale
+    * 1000s of concurrent NFS clients, 10GB+/s throughput
+    * Grow to PB-scale network file system, automatically
+* Performance Mode (set at EFS creation time)
+    * General Purpose (default) - latency-sensitive use case (web server, CMS.etc)
+    * Max I/O - higher latency, throughput, highly parallel (big data, media processing)
+* Throughput Mode
+    * Bursting - scale throughput based on storage. Eg: Each 1TB storage = 50MiB/s throughput
+    * Provisioned - set your throughput regardless of storage size; ex: 1Gi/s for 1TB storage
+    * Elastic - automatically scales throughput up or down based on your workloads
+        * Up to 3GiB/s for reads and 1GiB/s for writes
+        * Used for unpredictable workloads
+### Storage Class
+* Storage Tiers
+    * Standard: for frequently accessed file
+    * Infrequent Access (EFS-IA): cost to retrieve files, lower price to store. ENable EFS-IA with a lifecycle policy
+        * Basically, you need to set if a file is not accessed after N days, then move the file to IA.
+* Availability and Durability
+    * Standard: Multi-AZ, great for prod
+    * One Zone: One AZ, great for dev, backup enabled by default, compatible with IA (EFS One Zone-IA)
+
+### Hands-On
+* When creating EFS, in network part, just create a security that accepts "all traffic"
+* When you create EC2, in storage choose EFS. 
+    * After creating EC2, find the EFS's security group you created. You'll find inbound traffic part has been re-configured
+
