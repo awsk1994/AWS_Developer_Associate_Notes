@@ -189,3 +189,16 @@
 * When you create EC2, in storage choose EFS. 
     * After creating EC2, find the EFS's security group you created. You'll find inbound traffic part has been re-configured
 
+## EBS vs EFS
+
+* AZ
+    * EBS is tied to 1 AZ; you'll need to migrate if you want it in another AZ
+    * EFS is not tied down to a specific AZ. In each AZ, you connect to EFS via a **Mount Target**
+
+* Share Files
+    * EFS share files across instances that attach to it; EBS doesn't
+* Price
+    * EFS > EBS
+    * However, you could use EFS-IA for cost savings
+
+
