@@ -282,3 +282,12 @@
 * After a scaling activity happens, you are in the **cooldown period** (default 300 seconds)
 * During the cooldown period, the ASG will not launch or terminate additional instances (to allow for metrics to stabilize)
 * Advice: use a ready-to-use AMI To reduce configuration time in order to be serving requests faster and reduce the cooldown period
+
+## Instance Refresh
+
+* Goal: update launch template and then re-creating all EC2 instances
+* For this, we can use the native feature of instance refresh
+* Setting of minimum healthy percentage (this defines how many instances are be deleted over time; so you don't have too little instances at any point in time)
+* Specify a warn-up time (how long until instance is ready to use)
+
+<img src="./img/8_ELB_ASG/11.png"/>
