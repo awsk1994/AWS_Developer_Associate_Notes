@@ -85,3 +85,71 @@
     * Synchronization is established between the two databases
 
 <img src="./img/9_rds_aurora_elasticache/5.png"/>
+
+## Amazon Aurora
+
+* proprietary technology from AWS
+* Postgres and MySQL are both supported as Aurora DB
+* Aurora is "AWS Cloud optimized" and claims 5x performance improvement over MySQL on RDS, over 3x performance of Presgres on RDS
+* Aurora storage automatically grows in increments of 10GB, up to 128TB
+* Aurora can have up to 15 replicas and the replication process is faster than MySQL (sub 10ms replica lag)
+* Failover in Aurora is instantaneous, it's HA native
+* Aurora costs more than RDS (20% more) - but it is more efficient
+
+### High Availability and Read Scaling
+* 6 copies of your data across 3 AZ
+    * you only need:
+        * 4 copies out of 6 needed for writes
+        * 3 copies out of 6 needed for reads
+        * self healing with peer-to-peer replication
+        * storage is triped across 100s of volumes
+* one instance takes write (master)
+* automated failover for master in less than 30 seconds
+* Master + up to 15 read replicas serve reads
+    * if master fails, any of the read replicas can become the master (which is different from how RDS works)
+
+<img src="./img/9_rds_aurora_elasticache/6.png"/>
+
+* support for cross region replication
+
+### DB Cluster
+* Shared Storage
+* Read Replicas can be **auto-scaling**, but keeping track of all the IPs will be difficult, thus, there's something called **Reader Endpoint** which servers as a load balancer
+
+### Features
+* automatic fail-over
+* backup and recovery
+* isolation and security
+* industry compliance
+* push-button scaling
+* automated patching with zero downtime
+* advanced monitoring
+* routine maintenance
+* backtrack: restore data at any point in time without using backups
+
+## RDS & Aurora Security
+
+* At-rest encryption
+    * Database master & replicas encryption using AWS KMS - must be defined at launch time
+    * if the master is not encrypted, the read replicas cannot be encrypted
+    * to encrypt an un-encrypted database, go through a DB snapshot & restore as encrypted
+* In-flight encryption
+    * TLS-ready by default, use the AWS TLS root certificates client-side
+* IAM authentication
+    * IAM roles to connect to your database (instead of your username/pw)
+* Security Groups
+    * Control Network access to your RDS/aurora DB
+* No SSH available except on RDS custom
+* Audit Logs can be enabled and sent to CloudWatch Logs for longer retension
+
+## Amazon RDS Proxy
+* Fully managed database proxy for RDS
+* Allows apps to pool and share DB connections established with the database
+* Improving database efficiency by reducing the stress on database resources (eg. CPU, RAM) and minimize open connections (and timeouts)
+* Serverless, autoscaling, highly available (multi-AZ)
+* Reduced RDS & Aurora failover time by up to 66%
+* Supports RDS (MySQL, Postgres.etc) and Aurora
+* No code change reuqired for most apps
+* Enforce IAM Authentication for DB, and securely store credentials in AWS Secret Manager
+* RDS Proxy is never publicly accessible (must be accessed from VPC)
+
