@@ -153,3 +153,103 @@
 * Enforce IAM Authentication for DB, and securely store credentials in AWS Secret Manager
 * RDS Proxy is never publicly accessible (must be accessed from VPC)
 
+## ElastiCache
+
+* ElastiCache is a managed Redis/Memcached
+* Help reduce load off databases for read intensive workloads
+* Helps make your application stateless
+* AWS takes care of OS maintenance/patching, optimizations, setup, configuration, monitoring, failure recovery and backups
+
+* Using Elasticache involves heavy application code changes
+
+### Solutions Architecture
+
+* DB Cache
+    * Applications queries Elasticache, if not available, get from RDS and store in ElastiCache
+* User Session Store
+    * User logs into any of the application
+    * The application writes the session data into ElastiCache
+    * When the user hits another instance of our application, the instance retrieves the data and the user is already logged in
+
+<img src="./img/9_rds_aurora_elasticache/7.png"/>
+
+### Redis vs Memcached
+
+* Redis
+    * MultiAZ with Auto-Failover
+    * Read Replicas to **scale reads** and have **high availability**
+    * **Data Durability** using AOF persistence
+    * Backup and Restore features
+    * Support sets and Sorted sets
+* Memcached
+    * Multinode for partioning of data (**sharding**)
+    * No high availability (replication)
+    * Non persistent 
+    * No backup and restore
+    * Multi-threaded architecture
+
+## Caching Implementation Considerations
+
+* Is it safe to cache data?
+    * Data may be out of date, eventually consistent
+* Is caching effective for that data?
+    * Pattern: data changing slowly, few keys are frequently needed
+    * Anti patterns: data changing rapidly, all large key space frequently needed
+* Is your data structured well for caching?
+    * example: key value caching, or caching of aggregation results
+* Which caching pattern is the most appropriate?
+
+### Lazy Loading/Cache-Aside/Lazy Population
+
+* Get from cache first, if not available, get from db and update cache
+* Pros
+    * only requested data is cached (the cache isn't filled up with unused data)
+    * Node Failures are not fatal (just increased latency to warm the cache)
+* Cons
+    * Cache miss penalty that results in 3 round trips, noticeable delay for that request
+    * stale data: can be updated in the database and outdated in the cache
+
+## Write Through - Add or Update cache when Databaes is updated
+
+* Pros:
+    * Data in cache is never stale, reads are quick
+    * Write penalty vs Read penalty (each write requires 2 calls)
+* Cons:
+    * Missing data until it is added/updated in the DB. Mitigation is to implement Lazy loading strategy as well
+    * Cache churn: a lot of the data will never be read
+
+<img src="./img/9_rds_aurora_elasticache/8.png"/>
+
+### Cache Evictions and Time-to-live (TTL)
+* Cache eviction can occur in 3 ways:
+    * you delete the item explicity in the cache
+    * item is evicted because the memory is full and it's not recently used (LRU)
+    * you set an item time-to-live (or TTL)
+* TTL are helpful for any kind of data:
+    * Leaderboards
+    * Comments
+    * Activity Streams
+* TTL can range from few second to hours or days
+* If too many eviction happen due to memory, you should scale up or out
+
+### Final words of Wisdom
+* Lazy Loading/Cache aside is easy to implement and works for many situations as a foundation, esp on the read side
+* Write-through is usually combined with lazy loading as targeted for the queries or workloads that benefit from this optimization
+* Setting a TTLT is usually not a bad idea, except when you're using write-through. Set it to a sensible value for your application
+* Only cache the data that makes sense (user profiles, blogs.etc)
+* Quote: "there are only two hard things in computer science; cache invalidation and naming things"
+
+## Amazon MemoryDB for Redis
+* Redis-compatible, durable, in-memory database service
+* Ultra-fast performance with over 160 millions requests/second
+* Durable in-memory data storage with multi-az transactional log
+* scale seamlessly from 10s GB to 100s TBs of storage
+* Use cases: web and mobile apps, online gaming, media streaming...
+
+
+
+
+
+
+
+
