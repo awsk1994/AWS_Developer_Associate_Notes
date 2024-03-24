@@ -149,3 +149,62 @@
 * Use cases: load balance between regions, testing new applications
 * Assign a weight of 0 to stop sending traffic to a resource
 * If all weights are 0, all records will be returned equally
+
+
+### Latency Based
+* redirected to the resource that has the least latency close to us
+* super helpful when latency for users is a priority 
+* latency is based on traffic between users and AWS regions
+* Germany users may be directed to the US (if that's the lowest latency)
+* Can be associated with health check (has a failover capability)
+
+#### Health Checks
+* HTTP Health Checks are only for public resources
+* Health Check => Automated DNS Failover. There are 3 types:
+    1. Health Checks that minotr an endpoint (application, server, other AWS resource)
+    2. Health Checks that monitor other health checks (calculated health checks)
+    3. Health Checks that monitor CloudWatch Alarams (full control!!) - eg. throttles of DynamoDB alarms on RDS custom metrics 
+* Health checks are integrated with CW metrics
+
+<img src="./img/10_route_53/5.png"/>
+
+**Monitor an Endpoint**
+* About 15 global health checkers will check the endpoint health
+    * Healthy/unhealthy threshold - 3 (default)
+    * internal - 30 sec (can set to 10 sec - higher cost)
+    * supported protocol - HTTP, HTTPS and TCP
+    * If > 18% of health checkers report the endpoint is healthy, Route 53 considers it Healthy. Otherwise, it is unhealthy
+    * Ability to choose which locations you want Route 53 to use
+* Health checks pass only when the endpoint response with 2XX and 3XX status codes
+* Health Checks can be setup to pass/fail based on the text in the first 5120 bytes of the response.
+* Configure your router/firewall to allow incoming requests from Route53 Health Checkers
+
+<img src="./img/10_route_53/6.png"/>
+
+**Calculated Health Checks**
+* combine the result of multiple health checks into a single health
+* you can use OR, and or NOT
+* can monitor up to 256 child health checks
+* specify how many of the health checks need to pass to make the parent pass
+* Usage: perform maintence to your website without causing all health checks to fail. In other words, I only need to guarantee n number of alive nodes. I'm okay with a few down, either due to SLA or maintenance. Also remember that this will route based on latency, so the end user will not be affected.
+
+<img src="./img/10_route_53/7.png"/>
+
+**Private Hosted Zone**
+* Route 53 health checkers are outside the VPC
+* They can't access private endpoints (private VPC or on-premises resource)
+* You can create a CloudWatch Metric and associate a Cloudwatch Alarm, then create a health check that checks the alarm itself
+<img src="./img/10_route_53/8.png"/>
+
+### Failover (active-passive)
+
+<img src="./img/10_route_53/9.png"/>
+
+### GeoLocation
+
+* Different from latency-based!
+* This routing is based on user location
+* specify locaiton by continent, country or by US state (if there's overlapping, the most precise location is selected)
+* Should create a default record (in case there's no match on location)
+* use case: localization, restrict content distribution, load balancing...
+* can be associated with health checks
