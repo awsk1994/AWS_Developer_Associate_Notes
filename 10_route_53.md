@@ -208,3 +208,44 @@
 * Should create a default record (in case there's no match on location)
 * use case: localization, restrict content distribution, load balancing...
 * can be associated with health checks
+
+### Geoproximity
+
+* Route traffic to your resources based on the geophic location of users and resources
+* Ability to shift traffic to resource based on the defined bias
+* To change the size of the geographic region, specify bias values:
+    * To expand (1 to 99) - more traffic to the resource
+    * To shrink (-1 to -99) - less traffic to the resource
+
+* Resources can be:
+    * AWS resource (specify AWS region)
+    * Non-AWS resource (specify Latitude and Longitude)
+
+* You must use Route 53 Traffic Flow (advanced) to use this feature
+
+<img src="./img/10_route_53/10.png"/>
+
+<img src="./img/10_route_53/11.png"/>
+
+
+### Traffic Flow
+* Simplify the process of creating and maintaining records in large and complex configurations
+* Visual editor to manage complex routing decision trees
+* Configurations can be saved as **Traffic Flow Policy**
+    * can be applied to different Route 53 Hosted Zones (different domain names)
+    * Supports versioning
+
+<img src="./img/10_route_53/12.png"/>
+
+### IP based Routing
+* Routing is based on client's IP addresses
+* You provide a list of CIDRs for your clients and the corresponding endpoints/locations (user-IP-to-endpoint mappings)
+* Use cases: Optimize performance, reduce network costs...
+* Example: route end users from a particular ISP to a specific endpoint
+
+### MultiVAlue
+* Use when routing traffic to multiple resources
+* Route 53 return multiple values/resources
+* can be associated with health checks (return only values for healthy resources)
+* Up to 8 healthy records are returned for each multi-value query
+* Multi-value is not a substitude for having an ELB
